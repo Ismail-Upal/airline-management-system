@@ -4,52 +4,48 @@ import FlightCard from '../components/FlightCard';
 
 const Flights = () => {
   const [flights, setFlights] = useState([]);
-  const [search, setSearch] = useState({ origin: '', destination: '' });
-
-  const loadFlights = async () => {
-    try {
-      const { data } = await fetchFlights(search);
-      setFlights(data);
-    } catch (error) {
-      console.error("Error fetching flights", error);
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadFlights();
+    const getFlights = async () => {
+      try {
+        const { data } = await fetchFlights();
+        setFlights(data);
+      } catch (err) {
+        console.error("Failed to load flights");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getFlights();
   }, []);
 
-  const handleBook = async (flightId) => {
+  const handleBooking = async (id) => {
     try {
-      await bookFlight({ flight_id: flightId });
-      alert("Booking Successful!");
-      loadFlights(); // Refresh seat count
-    } catch (error) {
-      alert("Booking Failed. Please log in.");
+      await bookFlight({ flight_id: id });
+      alert("Success! Your seat is reserved.");
+    } catch (err) {
+      alert("Please login to book a flight.");
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-6 flex gap-4">
-        <input 
-          placeholder="Origin (e.g. JFK)" 
-          className="border p-2 rounded"
-          onChange={(e) => setSearch({...search, origin: e.target.value.toUpperCase()})}
-        />
-        <input 
-          placeholder="Destination (e.g. LHR)" 
-          className="border p-2 rounded"
-          onChange={(e) => setSearch({...search, destination: e.target.value.toUpperCase()})}
-        />
-        <button onClick={loadFlights} className="bg-green-600 text-white p-2 rounded">Search</button>
-      </div>
+    <div className="container mx-auto py-10 px-6">
+      <h2 className="text-3xl font-bold mb-8 border-b pb-4">Available Flights</h2>
       
-      <div>
-        {flights.map((flight) => (
-          <FlightCard key={flight.id} flight={flight} onBook={handleBook} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="text-center py-20 text-blue-600 font-bold">Loading Flights...</div>
+      ) : flights.length > 0 ? (
+        <div className="grid gap-6">
+          {flights.map(f => (
+            <FlightCard key={f.id} flight={f} onBook={handleBooking} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20 bg-white rounded shadow">
+          <p className="text-gray-500 italic">No flights available currently. Check back later.</p>
+        </div>
+      )}
     </div>
   );
 };
