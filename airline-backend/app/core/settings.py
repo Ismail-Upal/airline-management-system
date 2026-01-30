@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # Render Frontend URL for CORS
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://airline-frontend-rjej.onrender.com")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://airline-frontend2.onrender.com")
 
     class Config:
         env_file = ".env"
