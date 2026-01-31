@@ -1,4 +1,5 @@
 from typing import Optional
+import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -12,6 +13,7 @@ from app.core.security import (
     create_access_token
 )
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # =========================
@@ -28,21 +30,31 @@ class RegisterSchema(BaseModel):
 # =========================
 @router.post("/register", status_code=201)
 def register(user_data: RegisterSchema, db: Session = Depends(get_db)):
-    existing_user = db.query(User).filter(User.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+    try:
+        logger.info(f"Registration attempt for email: {user_data.email}")
+        
+        existing_user = db.query(User).filter(User.email == user_data.email).first()
+        if existing_user:
+            logger.warning(f"Email already registered: {user_data.email}")
+            raise HTTPException(status_code=400, detail="Email already registered")
 
-    new_user = User(
-        email=user_data.email,
-        full_name=user_data.full_name,
-        hashed_password=get_password_hash(user_data.password)
-    )
+        hashed_pwd = get_password_hash(user_data.password)
+        new_user = User(
+            email=user_data.email,
+            full_name=user_data.full_name,
+            hashed_password=hashed_pwd
+        )
 
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    return {"message": "User created successfully"}
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        
+        logger.info(f"User registered successfully: {user_data.email}")
+        return {"message": "User created successfully"}
+    except Exception as e:
+        logger.error(f"Registration error: {str(e)}", exc_info=True)
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
 
 
 # =========================
@@ -53,28 +65,36 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
-    print(f"Login attempt for: {form_data.username}")
-    user = db.query(User).filter(User.email == form_data.username).first()
-    
-    if not user:
-        print(f"User not found: {form_data.username}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
-        )
-    
-    print(f"User found: {user.email}, checking password...")
-    password_valid = verify_password(form_data.password, user.hashed_password)
-    print(f"Password valid: {password_valid}")
-    
-    if not password_valid:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
-        )
+    try:
+        logger.info(f"Login attempt for: {form_data.username}")
+        user = db.query(User).filter(User.email == form_data.username).first()
+        
+        if not user:
+            logger.warning(f"User not found: {form_data.username}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+        
+        logger.info(f"User found: {user.email}, checking password...")
+        password_valid = verify_password(form_data.password, user.hashed_password)
+        logger.info(f"Password valid: {password_valid}")
+        
+        if not password_valid:
+            logger.warning(f"Invalid password for user: {form_data.username}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
 
-    access_token = create_access_token(data={"sub": user.email})
-    return {
-        "access_token": access_token,
-        "token_type": "bearer"
-    }
+        access_token = create_access_token(data={"sub": user.email})
+        logger.info(f"Login successful for: {user.email}")
+        return {
+            "access_token": access_token,
+            "token_type": "bearer"
+        }
+    except Exception as e:
+        logger.error(f"Login error: {str(e)}", exc_info=True)
+        if isinstance(e, HTTPException):
+            raise
+        raise HTTPException(status_code=500, detail=f"Login failed: {str(e)}")
