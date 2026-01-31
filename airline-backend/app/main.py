@@ -6,30 +6,34 @@ from app.core.settings import settings
 # Corrected Imports
 from app.routers import auth_router, flight_router, booking_router
 
-# Create Database Tables
+# --- DATABASE RESET LOGIC ---
+# This line deletes the old, broken tables (Fixes the 500 Error)
+Base.metadata.drop_all(bind=engine) 
+
+# This creates the new tables with the correct 'full_name' column
 Base.metadata.create_all(bind=engine)
+# ----------------------------
 
 app = FastAPI(title="SkyLink Airlines")
 
-# --- THE CRITICAL FIX ---
-# You CANNOT use ["*"] if allow_credentials=True. 
-# You must list the specific frontend URL.
+# --- CORS CONFIGURATION ---
+# Wildcards ("*") do not work with allow_credentials=True. 
+# We must use explicit URLs.
 origins = [
     "https://airline-frontend2.onrender.com", # Your Production Frontend
-    "http://localhost:5173",                  # Your Local Frontend
-    "http://localhost:3000"                   # Alternate Local Frontend
+    "http://localhost:5173",                  # Vite/React Local
+    "http://localhost:3000",                  # Create-React-App Local
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,   # Use the specific list, NOT ["*"]
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# ------------------------
 
-# Include Routers
+# --- ROUTER REGISTRATION ---
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(flight_router, prefix="/flights", tags=["Flights"])
 app.include_router(booking_router, prefix="/bookings", tags=["Bookings"])
