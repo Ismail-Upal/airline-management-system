@@ -30,7 +30,7 @@ export const register = (formData) =>
 
 // FLIGHTS
 export const fetchFlights = (params) =>
-  API.get("/flights/flights", { params });
+  API.get("/flights", { params });
 
 // BOOKINGS
 export const bookFlight = (data) =>
