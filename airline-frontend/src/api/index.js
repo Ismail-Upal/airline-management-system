@@ -1,30 +1,39 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://airline-backend-cdzk.onrender.com',
+  baseURL: import.meta.env.VITE_API_URL || "https://airline-backend-cdzk.onrender.com",
 });
 
 API.interceptors.request.use((req) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        req.headers.Authorization = `Bearer ${token}`;
-    }
-    return req;
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
+  }
+  return req;
 });
 
-// LOGIN: Matches /auth/login in your docs
+// LOGIN (OAuth2PasswordRequestForm → FormData)
 export const login = (formData) => {
-    const data = new FormData();
-    data.append('username', formData.email); 
-    data.append('password', formData.password);
-    return API.post('/auth/login', data);
+  const data = new FormData();
+  data.append("username", formData.email);
+  data.append("password", formData.password);
+  return API.post("/auth/login", data);
 };
 
-// REGISTER: Only works if you add @router.post("/register") to auth.py!
-export const register = (formData) => API.post('/auth/register', formData);
+// REGISTER (JSON → Pydantic schema)
+export const register = (formData) =>
+  API.post("/auth/register", {
+    email: formData.email,
+    password: formData.password,
+    full_name: formData.fullName,
+  });
 
-// FLIGHTS: Matches /flights/flights/ in your docs
-export const fetchFlights = (searchParams) => API.get('/flights/flights/', { params: searchParams });
+// FLIGHTS
+export const fetchFlights = (params) =>
+  API.get("/flights/flights/", { params });
 
-// BOOKINGS: Matches /bookings/ in your docs
-export const bookFlight = (bookingData) => API.post('/bookings/', bookingData);
+// BOOKINGS
+export const bookFlight = (data) =>
+  API.post("/bookings/", data);
+
+export default API;
