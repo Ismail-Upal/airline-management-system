@@ -2,25 +2,608 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   SKYLINK AIRLINES - CUSTOM THEME
+   Aviation-inspired design system
+   ======================================== */
+
 @layer base {
+  /* Root Variables - Brand Colors */
+  :root {
+    --primary: #667eea;
+    --primary-dark: #5568d3;
+    --secondary: #764ba2;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    
+    /* Aviation palette */
+    --sky-blue: #0ea5e9;
+    --cloud-white: #f8fafc;
+    --night-purple: #764ba2;
+    --sunset-orange: #f97316;
+  }
+
+  /* Base Styles */
   body {
-    @apply antialiased text-slate-900 bg-gray-50;
+    @apply antialiased text-slate-900 bg-gradient-to-br from-slate-50 via-white to-blue-50;
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Enhanced Typography */
+  h1 {
+    @apply text-4xl font-bold tracking-tight text-slate-900;
+  }
+
+  h2 {
+    @apply text-3xl font-bold tracking-tight text-slate-800;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold text-slate-800;
+  }
+
+  h4 {
+    @apply text-xl font-semibold text-slate-700;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-purple-200 text-purple-900;
   }
 }
 
 @layer components {
-  /* This ensures your inputs look consistent across Login/Register */
-  input {
-    @apply focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all;
+  /* ========================================
+     BUTTONS - Aviation Style
+     ======================================== */
+  
+  .btn {
+    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 
+           shadow-md hover:shadow-xl transform hover:-translate-y-0.5 
+           focus:outline-none focus:ring-4 focus:ring-opacity-50;
   }
 
-  /* Smooth fade-in for page transitions */
+  .btn-primary {
+    @apply bg-gradient-to-r from-purple-600 to-indigo-600 text-white
+           hover:from-purple-700 hover:to-indigo-700
+           focus:ring-purple-500 shadow-purple-500/50;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-slate-700 border-2 border-slate-200
+           hover:bg-slate-50 hover:border-purple-300
+           focus:ring-purple-300;
+  }
+
+  .btn-success {
+    @apply bg-gradient-to-r from-green-500 to-emerald-600 text-white
+           hover:from-green-600 hover:to-emerald-700
+           focus:ring-green-500;
+  }
+
+  .btn-danger {
+    @apply bg-gradient-to-r from-red-500 to-rose-600 text-white
+           hover:from-red-600 hover:to-rose-700
+           focus:ring-red-500;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm rounded-lg;
+  }
+
+  .btn-lg {
+    @apply px-8 py-4 text-lg rounded-2xl;
+  }
+
+  /* ========================================
+     CARDS - Flight Card Style
+     ======================================== */
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-lg border border-slate-200/50
+           transition-all duration-300 hover:shadow-2xl hover:border-purple-200
+           hover:-translate-y-1;
+  }
+
+  .card-premium {
+    @apply bg-gradient-to-br from-white to-purple-50 rounded-2xl 
+           shadow-xl border-2 border-purple-200
+           transition-all duration-300 hover:shadow-2xl hover:border-purple-400
+           hover:-translate-y-1;
+  }
+
+  .card-glass {
+    @apply bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl 
+           border border-white/20 transition-all duration-300
+           hover:bg-white/80 hover:shadow-2xl;
+  }
+
+  /* ========================================
+     INPUTS - Aviation Form Style
+     ======================================== */
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  textarea,
+  select {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-slate-200
+           bg-white text-slate-900 placeholder-slate-400
+           transition-all duration-300
+           focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20
+           hover:border-slate-300
+           outline-none;
+  }
+
+  textarea {
+    @apply resize-none min-h-[100px];
+  }
+
+  select {
+    @apply cursor-pointer bg-white;
+  }
+
+  /* Input with icon */
+  .input-with-icon {
+    @apply relative;
+  }
+
+  .input-icon {
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-slate-400;
+  }
+
+  .input-with-icon input {
+    @apply pl-12;
+  }
+
+  /* ========================================
+     BADGES & STATUS
+     ======================================== */
+  
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800 border border-green-200;
+  }
+
+  .badge-warning {
+    @apply bg-amber-100 text-amber-800 border border-amber-200;
+  }
+
+  .badge-danger {
+    @apply bg-red-100 text-red-800 border border-red-200;
+  }
+
+  .badge-info {
+    @apply bg-blue-100 text-blue-800 border border-blue-200;
+  }
+
+  .badge-purple {
+    @apply bg-purple-100 text-purple-800 border border-purple-200;
+  }
+
+  /* ========================================
+     GRADIENTS - Aviation Themed
+     ======================================== */
+  
+  .gradient-primary {
+    @apply bg-gradient-to-r from-purple-600 to-indigo-600;
+  }
+
+  .gradient-sky {
+    @apply bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-600;
+  }
+
+  .gradient-sunset {
+    @apply bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600;
+  }
+
+  .gradient-night {
+    @apply bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900;
+  }
+
+  /* Text gradients */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-sky {
+    @apply bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent;
+  }
+
+  /* ========================================
+     ANIMATIONS
+     ======================================== */
+  
+  /* Fade in */
   .animate-fadeIn {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Slide in from right */
+  .animate-slideInRight {
+    animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Slide in from left */
+  .animate-slideInLeft {
+    animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Scale up */
+  .animate-scaleUp {
+    animation: scaleUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes scaleUp {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Plane taking off animation */
+  .animate-takeoff {
+    animation: takeoff 2s ease-in-out infinite;
+  }
+
+  @keyframes takeoff {
+    0%, 100% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) translateX(10px) rotate(-5deg);
+    }
+  }
+
+  /* Pulse glow */
+  .animate-pulse-glow {
+    animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    }
+    50% {
+      opacity: 0.8;
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.8);
+    }
+  }
+
+  /* ========================================
+     LAYOUTS
+     ======================================== */
+  
+  .container-app {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  /* Header with gradient background */
+  .header-gradient {
+    @apply bg-gradient-to-r from-purple-600 to-indigo-600 text-white
+           shadow-lg border-b-4 border-purple-700;
+  }
+
+  /* ========================================
+     MODALS
+     ======================================== */
+  
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-50
+           transition-opacity duration-300;
+  }
+
+  .modal-content {
+    @apply bg-white rounded-2xl shadow-2xl
+           transform transition-all duration-300
+           max-w-2xl mx-auto my-8;
+  }
+
+  .modal-header {
+    @apply px-6 py-4 border-b border-slate-200 rounded-t-2xl
+           bg-gradient-to-r from-purple-50 to-white;
+  }
+
+  .modal-body {
+    @apply px-6 py-6;
+  }
+
+  .modal-footer {
+    @apply px-6 py-4 border-t border-slate-200 rounded-b-2xl
+           bg-slate-50 flex justify-end gap-3;
+  }
+
+  /* ========================================
+     TABLES
+     ======================================== */
+  
+  .table-modern {
+    @apply w-full border-collapse bg-white rounded-xl overflow-hidden shadow-lg;
+  }
+
+  .table-modern thead {
+    @apply bg-gradient-to-r from-purple-600 to-indigo-600 text-white;
+  }
+
+  .table-modern th {
+    @apply px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider;
+  }
+
+  .table-modern td {
+    @apply px-6 py-4 border-b border-slate-200 transition-colors;
+  }
+
+  .table-modern tbody tr {
+    @apply hover:bg-purple-50 transition-colors;
+  }
+
+  /* ========================================
+     LOADING & SPINNERS
+     ======================================== */
+  
+  .spinner {
+    @apply inline-block w-8 h-8 border-4 border-purple-200 border-t-purple-600
+           rounded-full animate-spin;
+  }
+
+  .loading-overlay {
+    @apply fixed inset-0 bg-white/80 backdrop-blur-sm z-50
+           flex items-center justify-center;
+  }
+
+  /* ========================================
+     ALERTS & NOTIFICATIONS
+     ======================================== */
+  
+  .alert {
+    @apply p-4 rounded-xl border-l-4 flex items-start gap-3;
+  }
+
+  .alert-success {
+    @apply bg-green-50 border-green-500 text-green-900;
+  }
+
+  .alert-warning {
+    @apply bg-amber-50 border-amber-500 text-amber-900;
+  }
+
+  .alert-danger {
+    @apply bg-red-50 border-red-500 text-red-900;
+  }
+
+  .alert-info {
+    @apply bg-blue-50 border-blue-500 text-blue-900;
+  }
+
+  /* ========================================
+     FLIGHT-SPECIFIC COMPONENTS
+     ======================================== */
+  
+  /* Flight route indicator */
+  .flight-route {
+    @apply flex items-center gap-4 text-2xl font-bold;
+  }
+
+  .flight-route-arrow {
+    @apply text-purple-600 animate-pulse;
+  }
+
+  /* Seat */
+  .seat {
+    @apply w-10 h-10 rounded-lg border-2 cursor-pointer
+           transition-all duration-200 flex items-center justify-center
+           text-xs font-semibold;
+  }
+
+  .seat-available {
+    @apply bg-green-50 border-green-300 text-green-700
+           hover:bg-green-100 hover:border-green-400 hover:scale-110;
+  }
+
+  .seat-occupied {
+    @apply bg-slate-200 border-slate-400 text-slate-500 cursor-not-allowed;
+  }
+
+  .seat-selected {
+    @apply bg-purple-600 border-purple-700 text-white scale-110
+           shadow-lg shadow-purple-500/50;
+  }
+
+  /* Status indicators */
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block mr-2;
+  }
+
+  .status-scheduled {
+    @apply bg-green-500;
+  }
+
+  .status-delayed {
+    @apply bg-amber-500 animate-pulse;
+  }
+
+  .status-cancelled {
+    @apply bg-red-500;
+  }
+
+  /* ========================================
+     UTILITY CLASSES
+     ======================================== */
+  
+  .glass-effect {
+    @apply bg-white/30 backdrop-blur-xl border border-white/20;
+  }
+
+  .shadow-glow {
+    @apply shadow-2xl shadow-purple-500/30;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+}
+
+/* ========================================
+   CUSTOM UTILITIES
+   ======================================== */
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Custom scrollbar */
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    @apply bg-slate-100 rounded-full;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-purple-400 rounded-full hover:bg-purple-600;
+  }
+
+  /* Text truncate with tooltip */
+  .truncate-tooltip {
+    @apply truncate cursor-help;
+  }
+
+  /* Aspect ratios */
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Grid auto-fit */
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .grid-auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN HELPERS
+   ======================================== */
+
+@media (max-width: 640px) {
+  .btn {
+    @apply w-full;
+  }
+
+  .modal-content {
+    @apply mx-4;
+  }
+}
+
+/* ========================================
+   DARK MODE SUPPORT (Optional)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  /* Add dark mode styles if needed */
+  :root {
+    --bg-primary: #0f172a;
+    --text-primary: #f1f5f9;
+  }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    @apply bg-white text-black;
+  }
+
+  .card {
+    @apply shadow-none border;
   }
 }
