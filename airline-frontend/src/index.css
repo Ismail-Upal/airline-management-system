@@ -2,23 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply antialiased text-slate-900 bg-gray-50;
+  }
+}
+
 @layer components {
-  .btn-primary {
-    @apply bg-airline-primary text-white font-bold rounded-full 
-           shadow-lg transition-all duration-300 active:scale-95
-           hover:bg-airline-secondary hover:shadow-glow cursor-pointer;
+  /* This ensures your inputs look consistent across Login/Register */
+  input {
+    @apply focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all;
   }
 
-  .nav-link {
-    @apply text-slate-600 hover:text-airline-secondary transition-colors 
-           font-medium relative after:content-[''] after:absolute 
-           after:w-0 after:h-0.5 after:bg-airline-secondary 
-           after:left-0 after:-bottom-1 hover:after:w-full after:transition-all;
+  /* Smooth fade-in for page transitions */
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
   }
 
-  .card {
-    @apply bg-white/80 backdrop-blur-sm p-8 rounded-3xl border border-white/50 
-           shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-glow 
-           transition-all duration-500 cursor-pointer;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
