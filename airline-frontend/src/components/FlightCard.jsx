@@ -17,12 +17,12 @@ const FlightCard = ({ flight, onBook }) => {
         <div className="text-sm text-gray-500 mb-2">
           {flight.available_seats} seats left
         </div>
-        <button 
-          onClick={() => onBook(flight.id)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Book Now
-        </button>
+      <button 
+  onClick={() => onBook(flight.id)}
+  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-300 shadow-sm active:scale-95"
+>
+  Book Now
+</button>
       </div>
     </div>
   );
