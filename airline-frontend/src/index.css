@@ -2,14 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Styles */
 body {
-  @apply bg-gray-50 text-gray-900 font-sans;
+  @apply bg-gradient-to-br from-blue-50 via-white to-blue-100 
+         text-gray-900 font-sans;
 }
 
+/* Buttons */
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200;
+  @apply bg-gradient-to-r from-blue-600 to-indigo-600 
+         hover:from-indigo-600 hover:to-blue-700 
+         text-white font-bold py-2 px-6 rounded-full 
+         shadow-lg transition-all duration-300 ease-in-out 
+         transform hover:scale-105;
 }
 
+/* Cards */
 .card {
-  @apply bg-white rounded-lg shadow-md p-6 border border-gray-100;
+  @apply bg-white rounded-xl shadow-lg p-6 border border-gray-200 
+         transition-transform duration-300 ease-in-out 
+         hover:shadow-xl hover:-translate-y-1;
+}
+
+/* Navbar */
+.navbar {
+  @apply bg-gradient-to-r from-sky-500 to-blue-700 text-white shadow-md;
+}
+
+.nav-link {
+  @apply px-4 py-2 font-semibold transition duration-300 ease-in-out 
+         hover:text-yellow-300 hover:underline;
+}
+
+/* Animations (extend in Tailwind config) */
+@layer utilities {
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(59,130,246,0.6); }
+    50% { opacity: 0.8; box-shadow: 0 0 20px rgba(59,130,246,0.8); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  .animate-pulseGlow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
 }
