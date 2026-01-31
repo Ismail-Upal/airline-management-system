@@ -5,8 +5,7 @@ from app.models.flight import Flight
 from app.schemas.flight import FlightOut, FlightCreate
 from typing import List
 
-router = APIRouter(prefix="/flights", tags=["Flights"])
-
+router = APIRouter()
 @router.get("/", response_model=List[FlightOut])
 def get_flights(origin: str = None, destination: str = None, db: Session = Depends(get_db)):
     query = db.query(Flight)
