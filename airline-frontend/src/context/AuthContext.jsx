@@ -41,8 +41,8 @@ export const AuthProvider = ({ children }) => {
     const logoutUser = () => {
     localStorage.removeItem('token');
     setUser(null);
-    // Use a small delay or ensure the path is exactly what is in main.jsx
-    window.location.replace('/login'); 
+    // Redirecting to the base URL is safer for hosted apps
+    window.location.href = window.location.origin; 
 };
     return (
         <AuthContext.Provider value={{ user, loginUser, logoutUser }}>
