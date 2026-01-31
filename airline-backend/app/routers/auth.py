@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -19,7 +20,7 @@ router = APIRouter()
 class RegisterSchema(BaseModel):
     email: EmailStr
     password: str
-    full_name: str | None = None
+    full_name: Optional[str] = None
 
 
 # =========================
