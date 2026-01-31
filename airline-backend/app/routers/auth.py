@@ -52,9 +52,21 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
+    print(f"Login attempt for: {form_data.username}")
     user = db.query(User).filter(User.email == form_data.username).first()
-
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    
+    if not user:
+        print(f"User not found: {form_data.username}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password"
+        )
+    
+    print(f"User found: {user.email}, checking password...")
+    password_valid = verify_password(form_data.password, user.hashed_password)
+    print(f"Password valid: {password_valid}")
+    
+    if not password_valid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"

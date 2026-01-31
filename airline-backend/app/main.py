@@ -11,16 +11,10 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SkyLink Airlines")
 
-# --- THE DEFINITIVE CORS FIX ---
-# Note: You MUST use explicit URLs when allow_credentials=True
-origins = [
-    "https://airline-frontend2.onrender.com", # Your Production URL
-    "http://localhost:5173",                  # Local Development
-]
-
+# CORS configuration for Render deployment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Render will handle CORS properly
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://airline-backend-cdzk.onrender.com",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
 });
 
 API.interceptors.request.use((req) => {

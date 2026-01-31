@@ -12,11 +12,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // API expects OAuth2 form data usually, or JSON
-      const { data } = await login(new URLSearchParams({
-        username: formData.email, 
-        password: formData.password
-      }));
+      // Pass the form data object directly, the API will handle it
+      const { data } = await login(formData);
       loginUser(data.access_token);
       navigate('/flights');
     } catch (err) {
