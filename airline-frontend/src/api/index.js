@@ -25,7 +25,7 @@ export const register = (formData) =>
   API.post("/auth/register", {
     email: formData.email,
     password: formData.password,
-    full_name: formData.fullName, // Ensure the key on the LEFT is 'full_name'
+    full_name: formData.full_name, // Ensure the key on the LEFT is 'full_name'
   });
 
 // FLIGHTS
