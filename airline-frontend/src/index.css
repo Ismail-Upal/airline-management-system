@@ -4,44 +4,42 @@
 
 /* ========================================
    SKYLINK AIRLINES - PREMIUM THEME
-   Dynamic Aviation Design System
+   Professional Aviation Design System
    ======================================== */
 
 @layer base {
-  /* Root Variables - Enhanced Brand Colors */
+  /* Root Variables - Professional Aviation Colors */
   :root {
-    --primary: #667eea;
-    --primary-dark: #5568d3;
-    --secondary: #764ba2;
-    --accent: #06b6d4;
+    --primary: #0f172a;       /* Deep Navy */
+    --primary-light: #38bdf8; /* Sky Blue */
+    --secondary: #334155;     /* Slate */
+    --accent: #fbbf24;        /* Airline Gold (Premium) */
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
-    --info: #3b82f6;
+    --info: #0ea5e9;
     
     /* Aviation palette */
     --sky-blue: #0ea5e9;
     --cloud-white: #f8fafc;
-    --night-purple: #764ba2;
+    --night-navy: #020617;
     --sunset-orange: #f97316;
-    --airline-gold: #fbbf24;
   }
 
-  /* Dynamic Animated Background */
+  /* Dynamic Animated Background - Deep Blue Sky */
   body {
-    @apply antialiased text-slate-900;
+    @apply antialiased text-slate-100; /* Changed text to light for dark bg */
     font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
     
-    /* Multi-layer gradient background */
+    /* Deep Blue/Navy Aviation Gradient */
     background: linear-gradient(135deg, 
-      #667eea 0%, 
-      #764ba2 25%, 
-      #f093fb 50%, 
-      #4facfe 75%, 
-      #667eea 100%
+      #0f172a 0%,    /* Slate 900 (Night Sky) */
+      #1e3a8a 30%,   /* Blue 900 (Deep Ocean) */
+      #0369a1 70%,   /* Sky 700 (Cruising Altitude) */
+      #0ea5e9 100%   /* Sky 500 (Horizon) */
     );
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
@@ -63,9 +61,9 @@
     width: 100%;
     height: 100%;
     background-image: 
-      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
     animation: floatClouds 30s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
@@ -100,7 +98,7 @@
     background-size: 200% 200%;
     animation: sparkle 3s ease-in-out infinite;
     pointer-events: none;
-    opacity: 0.4;
+    opacity: 0.3;
     z-index: 0;
   }
 
@@ -109,23 +107,23 @@
     50% { opacity: 0.6; }
   }
 
-  /* Enhanced Typography */
+  /* Enhanced Typography - Adjusted for Dark Background */
   h1 {
-    @apply text-4xl md:text-5xl font-bold tracking-tight text-slate-900;
+    @apply text-4xl md:text-5xl font-bold tracking-tight text-white;
     animation: slideInDown 0.6s ease-out;
   }
 
   h2 {
-    @apply text-3xl md:text-4xl font-bold tracking-tight text-slate-800;
+    @apply text-3xl md:text-4xl font-bold tracking-tight text-slate-100;
     animation: slideInLeft 0.6s ease-out;
   }
 
   h3 {
-    @apply text-2xl md:text-3xl font-semibold text-slate-800;
+    @apply text-2xl md:text-3xl font-semibold text-slate-200;
   }
 
   h4 {
-    @apply text-xl md:text-2xl font-semibold text-slate-700;
+    @apply text-xl md:text-2xl font-semibold text-slate-300;
   }
 
   /* Smooth scrolling */
@@ -133,21 +131,21 @@
     scroll-behavior: smooth;
   }
 
-  /* Custom selection color */
+  /* Custom selection color - Blue/Gold */
   ::selection {
-    @apply bg-purple-300 text-purple-900;
+    @apply bg-sky-300 text-sky-900;
   }
 
   ::-moz-selection {
-    @apply bg-purple-300 text-purple-900;
+    @apply bg-sky-300 text-sky-900;
   }
 }
 
 @layer components {
   /* ========================================
-     BUTTONS - Premium Aviation Style
-     ======================================== */
-  
+      BUTTONS - Premium Aviation Style
+      ======================================== */
+   
   .btn {
     @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 
            shadow-lg hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105
@@ -177,10 +175,11 @@
     left: 100%;
   }
 
+  /* Updated to Blue/Navy Gradient */
   .btn-primary {
-    @apply bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white
-           hover:from-purple-700 hover:via-indigo-700 hover:to-purple-700
-           focus:ring-purple-500 shadow-purple-500/50;
+    @apply bg-gradient-to-r from-blue-600 via-sky-600 to-blue-600 text-white
+           hover:from-blue-700 hover:via-sky-700 hover:to-blue-700
+           focus:ring-sky-500 shadow-blue-500/50;
     background-size: 200% auto;
     animation: gradientFlow 3s ease infinite;
   }
@@ -191,16 +190,16 @@
   }
 
   .btn-secondary {
-    @apply bg-white text-slate-700 border-2 border-slate-200
-           hover:bg-gradient-to-r hover:from-white hover:to-purple-50 
-           hover:border-purple-300 hover:shadow-purple-300/50
-           focus:ring-purple-300;
+    @apply bg-white text-slate-800 border-2 border-slate-200
+           hover:bg-gradient-to-r hover:from-white hover:to-sky-50 
+           hover:border-sky-300 hover:text-sky-700 hover:shadow-sky-300/50
+           focus:ring-sky-300;
   }
 
   .btn-success {
-    @apply bg-gradient-to-r from-green-500 to-emerald-600 text-white
-           hover:from-green-600 hover:to-emerald-700
-           focus:ring-green-500 shadow-green-500/50;
+    @apply bg-gradient-to-r from-emerald-500 to-teal-600 text-white
+           hover:from-emerald-600 hover:to-teal-700
+           focus:ring-emerald-500 shadow-emerald-500/50;
   }
 
   .btn-danger {
@@ -209,9 +208,10 @@
            focus:ring-red-500 shadow-red-500/50;
   }
 
+  /* Gold Warning Button for Premium/Alerts */
   .btn-warning {
-    @apply bg-gradient-to-r from-amber-500 to-orange-600 text-white
-           hover:from-amber-600 hover:to-orange-700
+    @apply bg-gradient-to-r from-amber-400 to-orange-500 text-white
+           hover:from-amber-500 hover:to-orange-600
            focus:ring-amber-500 shadow-amber-500/50;
   }
 
@@ -224,15 +224,22 @@
   }
 
   /* ========================================
-     CARDS - Premium Flight Card Style
-     ======================================== */
-  
+      CARDS - Premium Flight Card Style
+      ======================================== */
+   
   .card {
+    /* Kept white for contrast against dark blue bg */
     @apply bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/50
-           transition-all duration-500 hover:shadow-2xl hover:border-purple-200
+           text-slate-800
+           transition-all duration-500 hover:shadow-2xl hover:border-sky-200
            hover:-translate-y-2 hover:bg-white;
     animation: cardEntrance 0.6s ease-out;
     position: relative;
+  }
+
+  /* Reset text color inside cards to dark */
+  .card h1, .card h2, .card h3, .card h4, .card p {
+    @apply text-slate-900;
   }
 
   @keyframes cardEntrance {
@@ -252,7 +259,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 2px;
-    background: linear-gradient(135deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+    background: linear-gradient(135deg, transparent, rgba(14, 165, 233, 0.3), transparent);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -265,9 +272,9 @@
   }
 
   .card-premium {
-    @apply bg-gradient-to-br from-white via-purple-50 to-indigo-50 rounded-2xl 
-           shadow-2xl border-2 border-purple-300
-           transition-all duration-500 hover:shadow-purple-500/50 hover:border-purple-500
+    @apply bg-gradient-to-br from-white via-sky-50 to-blue-50 rounded-2xl 
+           shadow-2xl border-2 border-sky-300 text-slate-900
+           transition-all duration-500 hover:shadow-sky-500/50 hover:border-sky-500
            hover:-translate-y-2 hover:scale-105;
     animation: cardFloat 3s ease-in-out infinite;
   }
@@ -278,15 +285,15 @@
   }
 
   .card-glass {
-    @apply bg-white/60 backdrop-blur-2xl rounded-2xl shadow-2xl 
-           border border-white/30 transition-all duration-500
-           hover:bg-white/70 hover:shadow-purple-500/30 hover:-translate-y-1;
+    @apply bg-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl 
+           border border-white/20 transition-all duration-500 text-white
+           hover:bg-white/20 hover:shadow-sky-500/30 hover:-translate-y-1;
   }
 
   /* ========================================
-     INPUTS - Enhanced Form Style
-     ======================================== */
-  
+      INPUTS - Enhanced Form Style
+      ======================================== */
+   
   input[type="text"],
   input[type="email"],
   input[type="password"],
@@ -297,12 +304,12 @@
   input[type="datetime-local"],
   textarea,
   select {
-    @apply w-full px-4 py-3 rounded-xl border-2 border-slate-200
+    @apply w-full px-4 py-3 rounded-xl border-2 border-slate-300
            bg-white text-slate-900 placeholder-slate-400
            transition-all duration-300
-           focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20
-           focus:shadow-lg focus:shadow-purple-500/20
-           hover:border-purple-300 hover:shadow-md
+           focus:border-sky-500 focus:ring-4 focus:ring-sky-500/20
+           focus:shadow-lg focus:shadow-sky-500/20
+           hover:border-sky-300 hover:shadow-md
            outline-none;
     animation: inputFadeIn 0.4s ease-out;
   }
@@ -319,9 +326,9 @@
   }
 
   /* ========================================
-     BADGES & STATUS
-     ======================================== */
-  
+      BADGES & STATUS
+      ======================================== */
+   
   .badge {
     @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
            transition-all duration-300 hover:scale-110 hover:shadow-lg;
@@ -340,7 +347,7 @@
   }
 
   .badge-success {
-    @apply bg-green-100 text-green-800 border border-green-300 hover:bg-green-200;
+    @apply bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200;
   }
 
   .badge-warning {
@@ -352,17 +359,17 @@
   }
 
   .badge-info {
-    @apply bg-blue-100 text-blue-800 border border-blue-300 hover:bg-blue-200;
+    @apply bg-sky-100 text-sky-800 border border-sky-300 hover:bg-sky-200;
   }
 
   .badge-purple {
-    @apply bg-purple-100 text-purple-800 border border-purple-300 hover:bg-purple-200;
+    @apply bg-indigo-100 text-indigo-800 border border-indigo-300 hover:bg-indigo-200;
   }
 
   /* ========================================
-     ANIMATIONS - Rich & Dynamic
-     ======================================== */
-  
+      ANIMATIONS - Rich & Dynamic
+      ======================================== */
+   
   /* Enhanced Fade In */
   .animate-fadeIn {
     animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -549,7 +556,7 @@
     }
   }
 
-  /* Pulse Glow - Enhanced */
+  /* Pulse Glow - Blue/Sky */
   .animate-pulse-glow {
     animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
@@ -557,13 +564,13 @@
   @keyframes pulseGlow {
     0%, 100% {
       opacity: 1;
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5),
-                  0 0 40px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.5),
+                  0 0 40px rgba(14, 165, 233, 0.3);
     }
     50% {
       opacity: 0.9;
-      box-shadow: 0 0 40px rgba(139, 92, 246, 0.8),
-                  0 0 80px rgba(139, 92, 246, 0.5);
+      box-shadow: 0 0 40px rgba(14, 165, 233, 0.8),
+                  0 0 80px rgba(14, 165, 233, 0.5);
     }
   }
 
@@ -626,11 +633,11 @@
   }
 
   /* ========================================
-     MODALS - Enhanced
-     ======================================== */
-  
+      MODALS - Enhanced
+      ======================================== */
+   
   .modal-overlay {
-    @apply fixed inset-0 bg-gradient-to-br from-black/60 to-purple-900/60 
+    @apply fixed inset-0 bg-gradient-to-br from-slate-900/80 to-blue-900/80 
            backdrop-blur-md z-50 transition-opacity duration-300;
     animation: fadeIn 0.3s ease-out;
   }
@@ -654,11 +661,11 @@
   }
 
   /* ========================================
-     LOADING & SPINNERS - Enhanced
-     ======================================== */
-  
+      LOADING & SPINNERS - Enhanced
+      ======================================== */
+   
   .spinner {
-    @apply inline-block w-10 h-10 border-4 border-purple-200 border-t-purple-600
+    @apply inline-block w-10 h-10 border-4 border-sky-200 border-t-sky-600
            rounded-full;
     animation: spin 1s linear infinite;
   }
@@ -682,7 +689,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #0ea5e9, #1e3a8a);
     animation: loadingDots 1.4s infinite ease-in-out both;
   }
 
@@ -706,9 +713,9 @@
   }
 
   /* ========================================
-     FLIGHT-SPECIFIC COMPONENTS
-     ======================================== */
-  
+      FLIGHT-SPECIFIC COMPONENTS
+      ======================================== */
+   
   /* Seat - Enhanced */
   .seat {
     @apply w-10 h-10 rounded-lg border-2 cursor-pointer
@@ -738,8 +745,8 @@
   }
 
   .seat-selected {
-    @apply bg-gradient-to-br from-purple-600 to-indigo-600 border-purple-700 
-           text-white scale-110 shadow-xl shadow-purple-500/50;
+    @apply bg-gradient-to-br from-sky-600 to-blue-600 border-sky-700 
+           text-white scale-110 shadow-xl shadow-sky-500/50;
     animation: seatSelected 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
@@ -756,17 +763,17 @@
   }
 
   /* ========================================
-     UTILITY CLASSES
-     ======================================== */
-  
+      UTILITY CLASSES
+      ======================================== */
+   
   .glass-effect {
     @apply bg-white/40 backdrop-blur-2xl border border-white/30 shadow-xl;
   }
 
   .shadow-glow {
     @apply shadow-2xl;
-    box-shadow: 0 20px 60px -15px rgba(139, 92, 246, 0.5),
-                0 10px 30px -10px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 20px 60px -15px rgba(14, 165, 233, 0.5),
+                0 10px 30px -10px rgba(3, 105, 161, 0.3);
   }
 
   .hover-lift {
@@ -774,7 +781,7 @@
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 
+    @apply bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 
            bg-clip-text text-transparent;
     background-size: 200% auto;
     animation: gradientFlow 3s ease infinite;
