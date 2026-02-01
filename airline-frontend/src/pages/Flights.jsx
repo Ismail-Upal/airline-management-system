@@ -92,8 +92,8 @@ const Flights = () => {
           <p className="text-gray-600 mb-8">
             Please sign in to your account to view available luxury routes and reserve your seat.
           </p>
-          <Link 
-            to="/login" 
+          <Link
+            to="/login"
             className="block w-full bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow-lg"
           >
             Go to Login
@@ -122,7 +122,7 @@ const Flights = () => {
           </span>
         )}
       </div>
-      
+    
       <div className="grid gap-6">
         {flights.map(f => (
           <div key={f.id} className="hover:scale-[1.01] transition-transform duration-300">
