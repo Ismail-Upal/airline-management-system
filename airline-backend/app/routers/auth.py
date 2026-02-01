@@ -14,6 +14,7 @@ from app.core.security import (
     create_access_token
 )
 from app.core.settings import settings
+from app.utils.email import send_reset_email
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -145,13 +146,13 @@ def forgot_password(data: ForgotPasswordSchema, db: Session = Depends(get_db)):
         # Generate reset link using FRONTEND_URL from settings
         reset_link = f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"
         
-        # TODO: Implement actual email sending here (e.g., using smtplib or SendGrid)
-        # For now, log the link to console for testing
-        logger.info(f"Password reset link for {data.email}: {reset_link}")
-        
-        # In production, send email:
-        # send_email(to=data.email, subject="Password Reset", body=f"Click here to reset: {reset_link}")
-        
+        if not settings.SMTP_HOST:
+            logger.warning("SMTP_HOST not set; cannot send reset email")
+            logger.info(f"Password reset link for {data.email}: {reset_link}")
+        else:
+            send_reset_email(data.email, reset_link)
+            logger.info(f"Password reset email sent to {data.email}")
+
         return {"message": "If an account exists, a reset link has been sent to your email"}
     except Exception as e:
         logger.error(f"Forgot password error: {str(e)}", exc_info=True)
