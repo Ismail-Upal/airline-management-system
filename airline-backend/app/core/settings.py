@@ -11,17 +11,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # Frontend URL for password reset links and CORS
-    # For local dev: http://localhost:5173
-    # For production: Set in Render environment variables to https://airline-frontend2.onrender.com
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://airline-frontend2.onrender.com")
-
-    # SMTP settings for password reset emails
-    SMTP_HOST: str = os.getenv("SMTP_HOST", "")
-    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
-    SMTP_USERNAME: str = os.getenv("SMTP_USERNAME", "")
-    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
-    SMTP_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", "no-reply@skylink.com")
-    SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
     
     class Config:
         env_file = ".env"
