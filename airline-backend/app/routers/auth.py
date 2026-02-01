@@ -149,15 +149,17 @@ def forgot_password(data: ForgotPasswordSchema, db: Session = Depends(get_db)):
         if not settings.SMTP_HOST:
             logger.warning("SMTP_HOST not set; cannot send reset email")
             logger.info(f"Password reset link for {data.email}: {reset_link}")
+            # Return link in response for development/testing
+            return {"message": "Reset link generated", "reset_link": reset_link}
         else:
             email_sent = send_reset_email(data.email, reset_link)
             if email_sent:
                 logger.info(f"Password reset email sent to {data.email}")
+                return {"message": "If an account exists, a reset link has been sent to your email"}
             else:
-                # Fallback: log the link if email fails
-                logger.warning(f"Email failed; reset link logged: {reset_link}")
-        
-        return {"message": "If an account exists, a reset link has been sent to your email"}
+                # Fallback: return the link if email fails
+                logger.warning(f"Email failed; reset link returned in response: {reset_link}")
+                return {"message": "Email delivery failed, but reset link is below", "reset_link": reset_link}
     except Exception as e:
         logger.error(f"Forgot password error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to process reset request")
