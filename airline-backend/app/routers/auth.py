@@ -145,10 +145,11 @@ def forgot_password(data: ForgotPasswordSchema, db: Session = Depends(get_db)):
             return {"message": "If an account exists, a reset link has been sent to your email"}
         
         # Create reset token
-        reset_link = f"http://localhost:5173/reset-password?token={reset_token}"
+        reset_token = create_reset_token({"sub": user.email})
         
-        # Generate reset link (replace 'http://localhost:3000' with your actual frontend URL)
-        reset_link = f"http://localhost:3000/reset-password?token={reset_token}"
+        # Generate reset link using environment variable
+        frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:5173')
+        reset_link = f"{frontend_url}/reset-password?token={reset_token}"
         
         # TODO: Implement actual email sending here (e.g., using smtplib or SendGrid)
         # For now, log the link to console for testing
