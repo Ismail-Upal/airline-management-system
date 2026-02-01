@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # Frontend URL for password reset links and CORS
     # For local dev: http://localhost:5173
     # For production: Set in Render environment variables to https://airline-frontend2.onrender.com
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://airline-frontend2.onrender.com")
     
     class Config:
         env_file = ".env"
