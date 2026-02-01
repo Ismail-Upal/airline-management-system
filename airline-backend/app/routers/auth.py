@@ -1,5 +1,7 @@
 from typing import Optional
 import logging
+from datetime import datetime, timedelta, timezone
+from jose import JWTError, jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -11,9 +13,8 @@ from app.core.security import (
     get_password_hash,
     create_access_token
 )
-import jwt
-from datetime import datetime, timedelta
 from app.core.settings import settings
+from app.utils.email import send_reset_email
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -33,32 +34,27 @@ class ResetPasswordSchema(BaseModel):
     token: str
     password: str
 
-# Assuming SECRET_KEY is in settings.py; if not, add it there or hardcoded for testing
-# e.g., in settings.py: SECRET_KEY = "your-secret-key-here"
-SECRET_KEY = settings.SECRET_KEY if hasattr(settings, 'SECRET_KEY') else "your-secret-key"  # Fallback
-ALGORITHM = "HS256"
+# Reset password token settings
 RESET_TOKEN_EXPIRE_MINUTES = 30  # Token expires in 30 minutes
 
-# Helper function to create reset token (similar to create_access_token but for reset)
+# Helper function to create reset token
 def create_reset_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    expire = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire, "type": "reset"})
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 # Helper function to verify reset token
 def verify_reset_token(token: str):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        token_type = payload.get("type")
         email: str = payload.get("sub")
-        if email is None:
+        if token_type != "reset" or not email:
             raise HTTPException(status_code=400, detail="Invalid token")
         return email
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=400, detail="Token has expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=400, detail="Invalid token")
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
 
 # =========================
 # REGISTER
@@ -148,14 +144,14 @@ def forgot_password(data: ForgotPasswordSchema, db: Session = Depends(get_db)):
         reset_token = create_reset_token({"sub": user.email})
         
         # Generate reset link using FRONTEND_URL from settings
-        reset_link = f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"
+        reset_link = f"{settings.FRONTEND_URL}/#/reset-password?token={reset_token}"
         
-        # TODO: Implement actual email sending here (e.g., using smtplib or SendGrid)
-        # For now, log the link to console for testing
-        logger.info(f"Password reset link for {data.email}: {reset_link}")
-        
-        # In production, send email:
-        # send_email(to=data.email, subject="Password Reset", body=f"Click here to reset: {reset_link}")
+        if not settings.SMTP_HOST:
+            logger.warning("SMTP_HOST not set; cannot send reset email")
+            logger.info(f"Password reset link for {data.email}: {reset_link}")
+        else:
+            send_reset_email(data.email, reset_link)
+            logger.info(f"Password reset email sent to {data.email}")
         
         return {"message": "If an account exists, a reset link has been sent to your email"}
     except Exception as e:
