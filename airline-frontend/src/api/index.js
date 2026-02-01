@@ -1,9 +1,7 @@
 import axios from "axios";
-
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
 });
-
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -11,7 +9,6 @@ API.interceptors.request.use((req) => {
   }
   return req;
 });
-
 // LOGIN (OAuth2PasswordRequestForm → FormData)
 export const login = (formData) => {
   const data = new FormData();
@@ -19,7 +16,6 @@ export const login = (formData) => {
   data.append("password", formData.password);
   return API.post("/auth/login", data);
 };
-
 // REGISTER (JSON → Pydantic schema)
 export const register = (formData) =>
   API.post("/auth/register", {
@@ -27,13 +23,16 @@ export const register = (formData) =>
     password: formData.password,
     full_name: formData.full_name, // ✅ FIXED
   });
-
 // FLIGHTS
 export const fetchFlights = (params) =>
   API.get("/flights", { params }); // ✅ FIXED
-
 // BOOKINGS
 export const bookFlight = (data) =>
   API.post("/bookings", data);
-
+// FORGOT PASSWORD
+export const forgotPassword = (data) =>
+  API.post("/auth/forgot-password", data);
+// RESET PASSWORD
+export const resetPassword = (data) =>
+  API.post("/auth/reset-password", data);
 export default API;
