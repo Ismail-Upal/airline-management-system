@@ -150,8 +150,12 @@ def forgot_password(data: ForgotPasswordSchema, db: Session = Depends(get_db)):
             logger.warning("SMTP_HOST not set; cannot send reset email")
             logger.info(f"Password reset link for {data.email}: {reset_link}")
         else:
-            send_reset_email(data.email, reset_link)
-            logger.info(f"Password reset email sent to {data.email}")
+            email_sent = send_reset_email(data.email, reset_link)
+            if email_sent:
+                logger.info(f"Password reset email sent to {data.email}")
+            else:
+                # Fallback: log the link if email fails
+                logger.warning(f"Email failed; reset link logged: {reset_link}")
         
         return {"message": "If an account exists, a reset link has been sent to your email"}
     except Exception as e:
