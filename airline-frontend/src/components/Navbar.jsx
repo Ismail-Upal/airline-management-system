@@ -52,13 +52,17 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           {user ? (
             <>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white">
+                <User size={16} className="text-amber-400" />
+                Hi, {firstName}
+              </span>
+
               <Link
                 to={profilePath}
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:border-amber-400/30 hover:bg-white/10 hover:text-amber-300 transition-all"
-                title="Open profile"
+                className="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-200 hover:bg-amber-500/20 transition-all"
               >
-                <User size={16} className="text-amber-400" />
-                <span className="max-w-[140px] truncate">Hi, {firstName}</span>
+                <User size={16} />
+                Profile
               </Link>
 
               <button
