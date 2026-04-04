@@ -24,21 +24,37 @@ const Login = () => {
     : { ring: 'rgba(102,126,234,0.7)', glow: 'rgba(102,126,234,0.2)', border: 'border-[#667eea]/30', bg: 'bg-[#667eea]/10', text: 'text-[#667eea]', active: 'from-[#667eea] to-[#764ba2]' };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      const { data } = await login({ ...formData, role: selectedRole });
-      loginUser(data.access_token);
-      const role = data.role || data.user?.role;
-      if (role === 'staff') navigate('/profile/staff');
-      else navigate('/profile/passenger');
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Invalid email or password');
-    } finally {
+  e.preventDefault();
+  setLoading(true);
+  setError("");
+
+  try {
+    const { data } = await login({ ...formData, role: selectedRole });
+
+    const apiRole = data?.role || data?.user?.role || selectedRole;
+
+    // Stop wrong portal access
+    if (apiRole !== selectedRole) {
+      setError(
+        `This account belongs to ${apiRole}. Please use the ${apiRole} login tab.`
+      );
       setLoading(false);
+      return;
     }
-  };
+
+    loginUser(data.access_token);
+
+    if (selectedRole === "staff") {
+      navigate("/profile/staff", { replace: true });
+    } else {
+      navigate("/profile/passenger", { replace: true });
+    }
+  } catch (err) {
+    setError(err.response?.data?.detail || "Invalid email or password");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="dark-page relative min-h-screen bg-[#030712] flex items-center justify-center overflow-hidden">
