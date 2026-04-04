@@ -17,11 +17,12 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-    if (role === "staff") {
-      return <Navigate to="/profile/staff" replace />;
-    }
-
-    return <Navigate to="/profile/passenger" replace />;
+    return (
+      <Navigate
+        to={role === "staff" ? "/profile/staff" : "/profile/passenger"}
+        replace
+      />
+    );
   }
 
   return children;
