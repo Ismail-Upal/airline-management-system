@@ -8,9 +8,7 @@ import {
   Globe,
   Clock,
   Plane,
-  MapPin,
   Calendar,
-  Users,
 } from "lucide-react";
 import Lottie from "lottie-react";
 import airplaneAnimation from "../assets/airplane.json";
@@ -76,22 +74,32 @@ const FlightStage = () => {
 const Home = () => {
   const navigate = useNavigate();
 
+  const airportMap = {
+    Bangladesh: ["Dhaka (DAC)", "Chattogram (CGP)", "Cox's Bazar (CXB)"],
+    "United Arab Emirates": ["Dubai (DXB)", "Abu Dhabi (AUH)", "Sharjah (SHJ)"],
+    "United Kingdom": ["London (LHR)", "Manchester (MAN)", "Birmingham (BHX)"],
+    Switzerland: ["Zurich (ZRH)", "Geneva (GVA)", "Basel (BSL)"],
+    "United States": ["New York (JFK)", "Los Angeles (LAX)", "Chicago (ORD)"],
+  };
+
+  const countries = Object.keys(airportMap);
+
   const [searchForm, setSearchForm] = useState({
-    from: "",
-    destination: "",
+    fromCountry: "",
+    fromCity: "",
+    destinationCountry: "",
+    destinationCity: "",
     date: "",
-    passengers: "1",
   });
 
   const searchHref = useMemo(() => {
     const params = new URLSearchParams();
 
-    if (searchForm.from.trim()) params.set("from", searchForm.from.trim());
-    if (searchForm.destination.trim()) {
-      params.set("destination", searchForm.destination.trim());
+    if (searchForm.fromCity) params.set("from", searchForm.fromCity);
+    if (searchForm.destinationCity) {
+      params.set("destination", searchForm.destinationCity);
     }
     if (searchForm.date) params.set("date", searchForm.date);
-    if (searchForm.passengers) params.set("passengers", searchForm.passengers);
 
     const query = params.toString();
     return query ? `/flights?${query}` : "/flights";
@@ -166,21 +174,45 @@ const Home = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
               <SearchInput
-                label="From"
-                placeholder="Departure City"
-                value={searchForm.from}
-                onChange={(value) => handleChange("from", value)}
-                onKeyDown={handleKeyDown}
-                icon={<MapPin size={18} />}
+                label="Departure Country"
+                value={searchForm.fromCountry}
+                onChange={(value) => {
+                  handleChange("fromCountry", value);
+                  handleChange("fromCity", "");
+                }}
+                options={countries.map((country) => ({ value: country, label: country }))}
               />
 
               <SearchInput
-                label="To"
-                placeholder="Destination City"
-                value={searchForm.destination}
-                onChange={(value) => handleChange("destination", value)}
-                onKeyDown={handleKeyDown}
-                icon={<MapPin size={18} />}
+                label="Departure City"
+                value={searchForm.fromCity}
+                onChange={(value) => handleChange("fromCity", value)}
+                options={(airportMap[searchForm.fromCountry] || []).map((city) => ({
+                  value: city,
+                  label: city,
+                }))}
+                disabled={!searchForm.fromCountry}
+              />
+
+              <SearchInput
+                label="Destination Country"
+                value={searchForm.destinationCountry}
+                onChange={(value) => {
+                  handleChange("destinationCountry", value);
+                  handleChange("destinationCity", "");
+                }}
+                options={countries.map((country) => ({ value: country, label: country }))}
+              />
+
+              <SearchInput
+                label="Destination City"
+                value={searchForm.destinationCity}
+                onChange={(value) => handleChange("destinationCity", value)}
+                options={(airportMap[searchForm.destinationCountry] || []).map((city) => ({
+                  value: city,
+                  label: city,
+                }))}
+                disabled={!searchForm.destinationCountry}
               />
 
               <SearchDateInput
@@ -189,19 +221,6 @@ const Home = () => {
                 onChange={(value) => handleChange("date", value)}
                 onKeyDown={handleKeyDown}
                 icon={<Calendar size={18} />}
-              />
-
-              <SearchSelect
-                label="Passengers"
-                value={searchForm.passengers}
-                onChange={(value) => handleChange("passengers", value)}
-                icon={<Users size={18} />}
-                options={[
-                  { value: "1", label: "1 Passenger" },
-                  { value: "2", label: "2 Passengers" },
-                  { value: "3", label: "3 Passengers" },
-                  { value: "4", label: "4 Passengers" },
-                ]}
               />
 
               <div className="flex flex-col gap-2">
@@ -315,24 +334,26 @@ const Home = () => {
 
 /* ================= HELPERS ================= */
 
-const SearchInput = ({ label, placeholder, value, onChange, onKeyDown, icon }) => (
+const SearchInput = ({ label, value, onChange, options, disabled = false }) => (
   <div className="flex flex-col gap-2">
     <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
       {label}
     </label>
-    <div className="relative group">
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/60">
-        {icon}
-      </div>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={onKeyDown}
-        placeholder={placeholder}
-        className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white placeholder:text-gray-500 focus:border-amber-500/50 transition-all outline-none"
-      />
-    </div>
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      disabled={disabled}
+      className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white focus:border-amber-500/50 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <option value="" className="bg-[#0b1220] text-gray-400">
+        Select option
+      </option>
+      {options.map((option) => (
+        <option key={option.value} value={option.value} className="bg-[#0b1220] text-white">
+          {option.label}
+        </option>
+      ))}
+    </select>
   </div>
 );
 
@@ -352,34 +373,6 @@ const SearchDateInput = ({ label, value, onChange, onKeyDown, icon }) => (
         onKeyDown={onKeyDown}
         className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white focus:border-amber-500/50 transition-all outline-none [color-scheme:dark]"
       />
-    </div>
-  </div>
-);
-
-const SearchSelect = ({ label, value, onChange, icon, options }) => (
-  <div className="flex flex-col gap-2">
-    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-      {label}
-    </label>
-    <div className="relative group">
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/60 pointer-events-none">
-        {icon}
-      </div>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white focus:border-amber-500/50 transition-all outline-none"
-      >
-        {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-            className="bg-[#0b1220] text-white"
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
     </div>
   </div>
 );
