@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { LogOut, User, Plane } from "lucide-react";
+import { LogOut, User } from "lucide-react";
+import brandLogo from "../assets/13a8ceec-9133-4e55-9da9-e1e88d9a1fc5.png";
 
 const Navbar = () => {
   const { user, logoutUser } = useContext(AuthContext);
@@ -18,38 +19,29 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#030712]/85 backdrop-blur-2xl text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
-        <Link to="/" className="inline-flex items-center gap-3 min-w-0">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10 text-amber-400 shadow-lg">
-            <Plane size={18} />
-          </div>
-
-          <div className="leading-tight min-w-0">
-            <p className="text-lg font-bold tracking-[0.18em] text-white">
-              SKYLINK
-            </p>
-            <p className="text-[11px] uppercase tracking-[0.35em] text-amber-300/80">
-              Airlines
-            </p>
-          </div>
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-6">
+        <Link to="/" className="inline-flex items-center min-w-0">
+          <img
+            src={brandLogo}
+            alt="Skylink Airlines"
+            className="h-11 w-auto object-contain"
+          />
         </Link>
 
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium">
+        <div className="ml-auto flex items-center gap-3">
           <Link
             to="/"
-            className="text-gray-300 hover:text-amber-300 transition-colors"
+            className="hidden md:inline-block text-sm font-medium text-gray-300 hover:text-amber-300 transition-colors"
           >
             Home
           </Link>
           <Link
             to="/flights"
-            className="text-gray-300 hover:text-amber-300 transition-colors"
+            className="hidden md:inline-block text-sm font-medium text-gray-300 hover:text-amber-300 transition-colors"
           >
             Flights
           </Link>
-        </div>
 
-        <div className="flex items-center gap-3">
           {user ? (
             <>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white">
