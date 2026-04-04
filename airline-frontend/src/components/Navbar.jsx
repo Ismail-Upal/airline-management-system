@@ -20,11 +20,11 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#030712]/85 backdrop-blur-2xl text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-6">
-        <Link to="/" className="inline-flex items-center min-w-0">
+        <Link to="/" className="flex items-center">
           <img
             src={brandLogo}
             alt="Skylink Airlines"
-            className="h-14 w"
+            className="h-16 w-auto object-contain"
           />
         </Link>
 
