@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { LogOut, User } from "lucide-react";
-import brandLogo from "../assets/13a8ceec-9133-4e55-9da9-e1e88d9a1fc5.png";
+import brandLogo from "../assets/skylink_logo_transparent.png";
 
 const Navbar = () => {
   const { user, logoutUser } = useContext(AuthContext);
