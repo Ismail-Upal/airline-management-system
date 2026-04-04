@@ -43,13 +43,13 @@ const Login = () => {
 
     loginUser(data.access_token, {
       ...(data?.user || {}),
-      role: apiRole,
+      role: chosenRole,
       email: data?.user?.email || formData.email,
       full_name: data?.user?.full_name || data?.user?.name || "",
     });
 
     navigate(
-      apiRole === "staff" ? "/profile/staff" : "/profile/passenger",
+      chosenRole === "staff" ? "/profile/staff" : "/profile/passenger",
       { replace: true }
     );
   } catch (err) {
