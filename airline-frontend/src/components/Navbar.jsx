@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { LogOut, User } from "lucide-react";
-import brandLogo from "../assets/skylink_logo_transparent.png";
+import Lottie from "lottie-react";
+import logoAnimation from "../assets/logo.json";
 
 const Navbar = () => {
   const { user, logoutUser } = useContext(AuthContext);
@@ -21,11 +22,9 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#030712]/85 backdrop-blur-2xl text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-6">
         <Link to="/" className="inline-flex items-center min-w-0">
-          <img
-            src={brandLogo}
-            alt="Skylink Airlines"
-            className="h-14 w-auto object-contain"
-          />
+          <div className="h-14 w-[180px]">
+            <Lottie animationData={logoAnimation} loop className="h-full w-full" />
+          </div>
         </Link>
 
         <div className="ml-auto flex items-center gap-3">
