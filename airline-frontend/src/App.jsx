@@ -8,6 +8,8 @@ import Register from './pages/Register';
 import Flights from './pages/Flights';
 import PassengerProfile from './pages/PassengerProfile';
 import StaffProfile from './pages/StaffProfile';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/flights" element={<Flights />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             
             {/* Protected Routes - Passenger */}
             <Route 
