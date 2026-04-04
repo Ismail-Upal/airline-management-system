@@ -9,7 +9,7 @@ import {
   BadgeCheck,
   Calendar,
   CheckCircle2,
-  CircleAlert,
+  AlertCircle,
   Clock3,
   CreditCard,
   Eye,
