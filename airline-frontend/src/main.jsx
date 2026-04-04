@@ -4,6 +4,7 @@ import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import './index.css';
 
+import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Flights from './pages/Flights';
 import Login from './pages/Login';
@@ -15,42 +16,6 @@ import StaffProfile from './pages/StaffProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Navbar uses AuthContext to show user info
-const Navbar = () => {
-  const { user, logoutUser } = useContext(AuthContext);
-
-  return (
-    <nav className="bg-white shadow-md py-4 px-6 flex justify-between items-center sticky top-0 z-50">
-      <Link to="/" className="text-2xl font-bold text-blue-800 tracking-tight">
-        SkyLink Airlines
-      </Link>
-      <div className="space-x-6 flex items-center">
-        <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</Link>
-        <Link to="/flights" className="text-gray-600 hover:text-blue-600 font-medium">Flights</Link>
-        
-        {user ? (
-          <>
-            <span className="text-blue-800 font-medium">Hi, {user.full_name || 'User'}</span>
-            <button
-              onClick={logoutUser}
-              className="text-red-500 hover:text-red-700 font-semibold transition"
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-100 transition">
-              Login
-            </Link>
-            <Link to="/register" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
-              Sign Up
-            </Link>
-          </>
-        )}
-      </div>
-    </nav>
-  );
-};
 
 const App = () => {
   return (
