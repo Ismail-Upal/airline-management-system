@@ -17,17 +17,22 @@ import {
   LockKeyhole,
   LogOut,
   Mail,
-  MapPin,
   Plane,
   Printer,
   Search,
   ShieldCheck,
   Ticket,
   User,
-  Users,
-  XCircle,
   Luggage,
 } from "lucide-react";
+import {
+  searchCheckinPassenger,
+  completeCheckin,
+  printBoardingPass,
+  changePassengerSeat,
+  addPassengerBaggage,
+  getFlightManifest,
+} from "../api";
 
 const StaffProfile = () => {
   const { user, logoutUser } = useContext(AuthContext);
@@ -116,7 +121,7 @@ const StaffProfile = () => {
     showToast._timer = window.setTimeout(() => setToast(null), 2600);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
 
     if (!searchQuery.trim()) {
@@ -124,58 +129,97 @@ const StaffProfile = () => {
       return;
     }
 
-    setSearchResult({
-      passenger: "John Doe",
-      booking: searchQuery.toUpperCase(),
-      flight: "SK-101",
-      seat: "12A",
-      status: "Ready for Check-in",
-      baggage: "1 piece",
-      gate: "B12",
-    });
-
-    showToast("Passenger record found.");
+    try {
+      const { data } = await searchCheckinPassenger(searchQuery);
+      setSearchResult(data);
+      showToast("Passenger record found.");
+    } catch (err) {
+      setSearchResult(null);
+      showToast(err.response?.data?.detail || "Passenger not found.", "warning");
+    }
   };
 
-  const handleCompleteCheckin = () => {
-    if (!searchResult) {
+  const handleCompleteCheckin = async () => {
+    if (!searchResult?.booking_id) {
       showToast("Search for a passenger first.", "warning");
       return;
     }
 
-    setSearchResult((prev) => ({
-      ...prev,
-      status: "Checked In",
-    }));
-
-    showToast("Check-in completed successfully.");
+    try {
+      await completeCheckin(searchResult.booking_id);
+      setSearchResult((prev) => ({
+        ...prev,
+        status: "Checked In",
+      }));
+      showToast("Check-in completed successfully.");
+    } catch (err) {
+      showToast(err.response?.data?.detail || "Check-in failed.", "warning");
+    }
   };
 
-  const handlePrintPass = () => {
-    if (!searchResult) {
+  const handlePrintPass = async () => {
+    if (!searchResult?.booking_id) {
       showToast("No passenger selected.", "warning");
       return;
     }
 
-    showToast("Boarding pass sent to print queue.");
+    try {
+      const { data } = await printBoardingPass(searchResult.booking_id);
+      console.log("Boarding pass:", data);
+      showToast("Boarding pass generated successfully.");
+    } catch (err) {
+      showToast(
+        err.response?.data?.detail || "Could not generate boarding pass.",
+        "warning"
+      );
+    }
   };
 
-  const handleChangeSeat = () => {
-    if (!searchResult) {
+  const handleChangeSeat = async () => {
+    if (!searchResult?.booking_id) {
       showToast("No passenger selected.", "warning");
       return;
     }
 
-    showToast("Seat change workflow opened.");
+    try {
+      const newSeat = "14C";
+      await changePassengerSeat(searchResult.booking_id, newSeat);
+      setSearchResult((prev) => ({
+        ...prev,
+        seat: newSeat,
+      }));
+      showToast("Seat updated successfully.");
+    } catch (err) {
+      showToast(err.response?.data?.detail || "Seat change failed.", "warning");
+    }
   };
 
-  const handleAddBaggage = () => {
-    if (!searchResult) {
+  const handleAddBaggage = async () => {
+    if (!searchResult?.booking_id) {
       showToast("No passenger selected.", "warning");
       return;
     }
 
-    showToast("Extra baggage added successfully.");
+    try {
+      const { data } = await addPassengerBaggage(searchResult.booking_id, 1);
+      setSearchResult((prev) => ({
+        ...prev,
+        baggage: data?.baggage ?? prev?.baggage,
+      }));
+      showToast("Extra baggage added successfully.");
+    } catch (err) {
+      showToast(err.response?.data?.detail || "Could not add baggage.", "warning");
+    }
+  };
+
+  const handleViewManifest = async (flightNumber) => {
+    try {
+      const { data } = await getFlightManifest(flightNumber);
+      console.log("Manifest:", data);
+      showToast(`Manifest loaded for ${flightNumber}.`);
+    } catch (err) {
+      showToast(err.response?.data?.detail || "Could not load manifest.", "warning");
+    }
   };
 
   const handleLogout = async () => {
@@ -206,7 +250,11 @@ const StaffProfile = () => {
               : "bg-emerald-500/15 border-emerald-400/20 text-emerald-200"
           }`}
         >
-          {toast.type === "warning" ? <CircleOff size={18} /> : <CheckCircle2 size={18} />}
+          {toast.type === "warning" ? (
+            <CircleOff size={18} />
+          ) : (
+            <CheckCircle2 size={18} />
+          )}
           <span className="text-sm font-medium">{toast.message}</span>
         </div>
       )}
@@ -455,13 +503,22 @@ const StaffProfile = () => {
                   description="Useful side actions for airport staff workflows."
                 >
                   <div className="mt-6 grid gap-3">
-                    <ActionButton onClick={() => showToast("Seat map opened.")} icon={<Eye size={16} />}>
+                    <ActionButton
+                      onClick={() => showToast("Seat map opened.")}
+                      icon={<Eye size={16} />}
+                    >
                       Open Seat Map
                     </ActionButton>
-                    <ActionButton onClick={() => showToast("Payment terminal connected.")} icon={<CreditCard size={16} />}>
+                    <ActionButton
+                      onClick={() => showToast("Payment terminal connected.")}
+                      icon={<CreditCard size={16} />}
+                    >
                       Ancillary Payment
                     </ActionButton>
-                    <ActionButton onClick={() => showToast("Passenger assistance requested.")} icon={<Headphones size={16} />}>
+                    <ActionButton
+                      onClick={() => showToast("Passenger assistance requested.")}
+                      icon={<Headphones size={16} />}
+                    >
                       Passenger Assistance
                     </ActionButton>
                   </div>
@@ -537,7 +594,7 @@ const StaffProfile = () => {
                         Start Check-in
                       </ActionButton>
                       <ActionButton
-                        onClick={() => showToast(`Manifest opened for ${flight.flightNumber}.`)}
+                        onClick={() => handleViewManifest(flight.flightNumber)}
                         icon={<Eye size={16} />}
                       >
                         View Manifest
@@ -732,6 +789,10 @@ const StatusBadge = ({ status }) => {
     Scheduled: "bg-blue-500/10 text-blue-300 border border-blue-400/20",
     Completed: "bg-emerald-500/10 text-emerald-300 border border-emerald-400/20",
     Pending: "bg-amber-500/10 text-amber-200 border border-amber-400/20",
+    "Ready for Check-in":
+      "bg-blue-500/10 text-blue-300 border border-blue-400/20",
+    "Checked In":
+      "bg-emerald-500/10 text-emerald-300 border border-emerald-400/20",
   };
 
   return (
