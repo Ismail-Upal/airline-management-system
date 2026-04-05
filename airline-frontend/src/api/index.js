@@ -21,7 +21,7 @@ const getStoredUser = () => {
   }
 };
 
-// LOGIN (OAuth2PasswordRequestForm → FormData)
+// LOGIN
 export const login = (formData) => {
   const data = new FormData();
   data.append("username", formData.email);
@@ -62,6 +62,15 @@ export const getMyBookings = (userId = null) => {
   });
 };
 
+export const cancelBooking = (bookingId, userId = null) => {
+  const storedUser = getStoredUser();
+  const resolvedUserId = userId || storedUser?.user_id || storedUser?.id;
+
+  return API.put(`/bookings/${bookingId}/cancel`, null, {
+    params: { user_id: resolvedUserId },
+  });
+};
+
 // FORGOT PASSWORD
 export const forgotPassword = (data) =>
   API.post("/auth/forgot-password", data);
@@ -70,10 +79,7 @@ export const forgotPassword = (data) =>
 export const resetPassword = (data) =>
   API.post("/auth/reset-password", data);
 
-// =============================
 // STAFF CHECK-IN / OPERATIONS
-// =============================
-
 export const searchCheckinPassenger = (query) =>
   API.get("/checkin/search", {
     params: { query },
