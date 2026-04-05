@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Canvas } from "@react-three/fiber";
@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 
 const PassengerProfile = () => {
-  const { user, logoutUser } = useContext(AuthContext);
+  const { user, setUser, logoutUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("overview");
@@ -41,8 +41,8 @@ const PassengerProfile = () => {
   const [profileForm, setProfileForm] = useState({
     full_name: user?.full_name || user?.name || "",
     email: user?.email || user?.sub || "",
-    phone: "+880 1XXXXXXXXX",
-    nationality: "Bangladeshi",
+    phone: user?.phone || "+880 1XXXXXXXXX",
+    nationality: user?.nationality || "Bangladeshi",
   });
 
   const [bookings, setBookings] = useState([
@@ -96,6 +96,17 @@ const PassengerProfile = () => {
     { id: "profile", label: "Profile", icon: User },
   ];
 
+  useEffect(() => {
+    if (!user) return;
+
+    setProfileForm({
+      full_name: user?.full_name || user?.name || "",
+      email: user?.email || user?.sub || "",
+      phone: user?.phone || "+880 1XXXXXXXXX",
+      nationality: user?.nationality || "Bangladeshi",
+    });
+  }, [user]);
+
   const activeBookings = bookings.filter((b) => b.status !== "Cancelled");
   const confirmedBookings = bookings.filter((b) => b.status === "Confirmed");
 
@@ -125,8 +136,28 @@ const PassengerProfile = () => {
   };
 
   const handleSaveProfile = () => {
+    const updatedUser = {
+      ...(user || {}),
+      full_name: profileForm.full_name,
+      email: profileForm.email,
+      phone: profileForm.phone,
+      nationality: profileForm.nationality,
+    };
+
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setUser?.(updatedUser);
     setEditing(false);
     showToast("Profile details updated successfully.");
+  };
+
+  const handleCancelEdit = () => {
+    setProfileForm({
+      full_name: user?.full_name || user?.name || "",
+      email: user?.email || user?.sub || "",
+      phone: user?.phone || "+880 1XXXXXXXXX",
+      nationality: user?.nationality || "Bangladeshi",
+    });
+    setEditing(false);
   };
 
   const handleCancelBooking = (id) => {
@@ -359,7 +390,7 @@ const PassengerProfile = () => {
               <GlassCard
                 eyebrow="Quick Actions"
                 title="Everything you need before departure"
-                description="Common passenger actions, redesigned to fit your home page theme and behave consistently."
+                description="Common passenger actions redesigned to stay aligned with your premium home-page search flow."
               >
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                   <QuickActionCard
@@ -566,7 +597,7 @@ const PassengerProfile = () => {
                         Save Changes
                       </ActionButton>
                       <ActionButton
-                        onClick={() => setEditing(false)}
+                        onClick={handleCancelEdit}
                         icon={<XCircle size={16} />}
                       >
                         Cancel
