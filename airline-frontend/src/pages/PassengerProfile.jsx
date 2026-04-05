@@ -26,6 +26,7 @@ import {
   User,
   Users,
   XCircle,
+  Download,
 } from "lucide-react";
 
 const PassengerProfile = () => {
@@ -149,6 +150,19 @@ const PassengerProfile = () => {
     }
 
     showToast(`Mobile check-in opened for ${booking.flightNumber}.`);
+  };
+
+  const handleDownloadTicket = () => {
+    if (!selectedBooking) {
+      showToast("No booking selected.", "warning");
+      return;
+    }
+
+    window.print();
+  };
+
+  const handleChangePassword = () => {
+    navigate("/forgot-password");
   };
 
   const handleLogout = async () => {
@@ -577,7 +591,10 @@ const PassengerProfile = () => {
                   description="Professional account actions styled consistently with your luxury UI."
                 >
                   <div className="mt-6 grid gap-3">
-                    <ActionButton icon={<LockKeyhole size={16} />}>
+                    <ActionButton
+                      onClick={handleChangePassword}
+                      icon={<LockKeyhole size={16} />}
+                    >
                       Change Password
                     </ActionButton>
                     <ActionButton
@@ -611,6 +628,7 @@ const PassengerProfile = () => {
         <TicketModal
           booking={selectedBooking}
           onClose={() => setSelectedBooking(null)}
+          onDownload={handleDownloadTicket}
         />
       )}
     </div>
@@ -785,7 +803,7 @@ const ActionButton = ({
   );
 };
 
-const TicketModal = ({ booking, onClose }) => (
+const TicketModal = ({ booking, onClose, onDownload }) => (
   <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-md flex items-center justify-center px-4">
     <div className="w-full max-w-2xl bg-[#07101f] border border-white/10 rounded-[28px] shadow-2xl overflow-hidden">
       <div className="p-6 md:p-7 border-b border-white/10 flex items-center justify-between">
@@ -837,7 +855,7 @@ const TicketModal = ({ booking, onClose }) => (
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <ActionButton primary icon={<Ticket size={16} />}>
+          <ActionButton primary icon={<Download size={16} />} onClick={onDownload}>
             Download Ticket
           </ActionButton>
           <ActionButton onClick={onClose}>Close</ActionButton>
