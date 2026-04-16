@@ -12,10 +12,12 @@ from app.models.user import User
 from app.core.security import (
     verify_password,
     get_password_hash,
-    create_access_token
+    create_access_token,
+    get_current_user
 )
 from app.core.settings import settings
 from app.utils.email import send_reset_email
+from app.schemas.user import UpdateProfileSchema
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -252,3 +254,66 @@ def reset_password(data: ResetPasswordSchema, db: Session = Depends(get_db)):
         logger.error(f"Reset password error: {str(e)}", exc_info=True)
         db.rollback()
         raise HTTPException(status_code=500, detail="Failed to reset password")
+
+# =========================
+# UPDATE PROFILE
+# =========================
+@router.put("/users/{user_id}")
+def update_user_profile(
+    user_id: int,
+    profile_data: UpdateProfileSchema,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update user profile (full_name, phone, nationality)
+    Users can only update their own profile
+    """
+    try:
+        logger.info(f"Profile update request for user_id: {user_id}")
+        
+        # ── Security: User can only update their own profile ──────────
+        if current_user["user_id"] != user_id:
+            logger.warning(f"Unauthorized profile update attempt by user {current_user['user_id']} for user {user_id}")
+            raise HTTPException(
+                status_code=403,
+                detail="Not authorized to update this profile"
+            )
+        
+        # ── Find user ───────────────────────────────────────────────
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            logger.warning(f"User not found for profile update: {user_id}")
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # ── Update fields ───────────────────────────────────────────
+        if profile_data.full_name is not None:
+            user.full_name = profile_data.full_name
+        if profile_data.phone is not None:
+            user.phone = profile_data.phone
+        if profile_data.nationality is not None:
+            user.nationality = profile_data.nationality
+        
+        db.commit()
+        db.refresh(user)
+        
+        logger.info(f"Profile updated successfully for user: {user_id}")
+        
+        return {
+            "message": "Profile updated successfully",
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "full_name": user.full_name,
+                "phone": user.phone,
+                "nationality": user.nationality,
+                "role": user.role,
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Profile update error: {str(e)}", exc_info=True)
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to update profile")
