@@ -286,77 +286,140 @@ const Flights = () => {
         <section className="mb-10">
           <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[28px] p-6 md:p-8 shadow-2xl">
             {/* Header - EXACTLY like Home */}
-            <div className="flex items-center justify-between gap-4 mb-6 border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <Search className="text-amber-400" size={20} />
-                <span className="font-bold tracking-widest text-sm uppercase">
-                  Refine your journey
-                </span>
-              </div>
-
+            <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-4">
+              <Search className="text-amber-400" size={20} />
+              <span className="font-bold tracking-widest text-sm uppercase">
+                Refine your journey
+              </span>
+              
+              {/* Clear button - Right aligned */}
               <button
                 onClick={clearFilters}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm hover:bg-white/10 transition-all"
+                className="ml-auto inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm hover:bg-white/10 transition-all"
               >
                 <RefreshCcw size={16} />
                 Clear filters
               </button>
             </div>
-
-            {/* Filter Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-5">
-              <SearchField
-                label="From"
-                value={filters.from}
-                onChange={(value) => handleFilterChange("from", value)}
-                placeholder="Departure city"
-                icon={<MapPin size={17} />}
-              />
-
-              <SearchField
-                label="To"
-                value={filters.destination}
-                onChange={(value) => handleFilterChange("destination", value)}
-                placeholder="Destination city"
-                icon={<MapPin size={17} />}
-              />
-
-              <DateField
-                label="Depart"
-                value={filters.departDate}
-                onChange={(value) => handleFilterChange("departDate", value)}
-                icon={<Calendar size={17} />}
-              />
-
-              <SelectField
-                label="Passengers"
-                value={filters.passengers}
-                onChange={(value) => handleFilterChange("passengers", value)}
-                icon={<Users size={17} />}
-                options={[
-                  { value: "1", label: "1 Passenger" },
-                  { value: "2", label: "2 Passengers" },
-                  { value: "3", label: "3 Passengers" },
-                  { value: "4", label: "4 Passengers" },
-                ]}
-              />
-
-              <SelectField
-                label="Sort By"
-                value={filters.sortBy}
-                onChange={(value) => handleFilterChange("sortBy", value)}
-                icon={<Sparkles size={17} />}
-                options={[
-                  { value: "departureSoonest", label: "Departure Soonest" },
-                  { value: "priceLowHigh", label: "Price: Low to High" },
-                  { value: "priceHighLow", label: "Price: High to Low" },
-                  { value: "seatsHighLow", label: "Most Seats Available" },
-                ]}
-              />
-
-              <ActionField onSearch={applySearch} />
+        
+            {/* Filter Grid - 6 columns like Home */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-6">
+              {/* FROM INPUT */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                  From
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/70">
+                    <MapPin size={17} />
+                  </div>
+                  <input
+                    type="text"
+                    value={filters.from}
+                    onChange={(e) => handleFilterChange("from", e.target.value)}
+                    placeholder="Departure city"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white placeholder:text-gray-500 outline-none focus:border-amber-500/50 transition-all"
+                  />
+                </div>
+              </div>
+        
+              {/* TO INPUT */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                  To
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/70">
+                    <MapPin size={17} />
+                  </div>
+                  <input
+                    type="text"
+                    value={filters.destination}
+                    onChange={(e) => handleFilterChange("destination", e.target.value)}
+                    placeholder="Destination city"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white placeholder:text-gray-500 outline-none focus:border-amber-500/50 transition-all"
+                  />
+                </div>
+              </div>
+        
+              {/* DATE INPUT - FIXED */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                  Depart
+                </label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/70 pointer-events-none z-10">
+                    <Calendar size={17} />
+                  </div>
+                  <input
+                    type="date"
+                    value={filters.departDate}
+                    onChange={(e) => handleFilterChange("departDate", e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white focus:border-amber-500/50 transition-all outline-none [color-scheme:dark]"
+                  />
+                </div>
+              </div>
+        
+              {/* PASSENGERS SELECT */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                  Passengers
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/70 pointer-events-none">
+                    <Users size={17} />
+                  </div>
+                  <select
+                    value={filters.passengers}
+                    onChange={(e) => handleFilterChange("passengers", e.target.value)}
+                    className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white outline-none focus:border-amber-500/50 transition-all"
+                  >
+                    <option value="1" className="bg-[#0b1220]">1 Passenger</option>
+                    <option value="2" className="bg-[#0b1220]">2 Passengers</option>
+                    <option value="3" className="bg-[#0b1220]">3 Passengers</option>
+                    <option value="4" className="bg-[#0b1220]">4 Passengers</option>
+                  </select>
+                </div>
+              </div>
+        
+              {/* SORT BY SELECT */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                  Sort By
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/70 pointer-events-none">
+                    <Sparkles size={17} />
+                  </div>
+                  <select
+                    value={filters.sortBy}
+                    onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+                    className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white outline-none focus:border-amber-500/50 transition-all"
+                  >
+                    <option value="departureSoonest" className="bg-[#0b1220]">Departure Soonest</option>
+                    <option value="priceLowHigh" className="bg-[#0b1220]">Price: Low to High</option>
+                    <option value="priceHighLow" className="bg-[#0b1220]">Price: High to Low</option>
+                    <option value="seatsHighLow" className="bg-[#0b1220]">Most Seats Available</option>
+                  </select>
+                </div>
+              </div>
+        
+              {/* ACTION/SEARCH BUTTON */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                  Action
+                </label>
+                <button
+                  type="button"
+                  onClick={applySearch}
+                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:scale-[1.02] text-black font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                  Search <ArrowRight size={18} />
+                </button>
+              </div>
             </div>
-
+        
+            {/* Error Message */}
             {error && (
               <div className="mt-5 rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200 flex items-center gap-2">
                 <AlertCircle size={16} />
@@ -365,7 +428,6 @@ const Flights = () => {
             )}
           </div>
         </section>
-
         <section className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h3 className="text-2xl font-bold">Available Flights</h3>
