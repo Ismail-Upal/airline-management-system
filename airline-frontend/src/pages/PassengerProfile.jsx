@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
-import { getMyBookings, cancelBooking } from "../api";
+import { getMyBookings, cancelBooking, updateUserProfile } from "../api";
 import {
   ArrowRight,
   Award,
@@ -155,21 +155,35 @@ const PassengerProfile = () => {
     }));
   };
 
-  const handleSaveProfile = () => {
+ const handleSaveProfile = async () => {
+  try {
+    // Call backend to update profile
+    await updateUserProfile({
+      full_name: profileForm.full_name,
+      phone: profileForm.phone,
+      nationality: profileForm.nationality,
+    });
+
+    // Update local state
     const updatedUser = {
       ...(user || {}),
       full_name: profileForm.full_name,
-      email: profileForm.email,
       phone: profileForm.phone,
       nationality: profileForm.nationality,
     };
 
+    // Save to localStorage
     localStorage.setItem("user", JSON.stringify(updatedUser));
     setUser?.(updatedUser);
     setEditing(false);
     showToast("Profile details updated successfully.");
-  };
-
+  } catch (err) {
+    showToast(
+      err.response?.data?.detail || "Failed to update profile. Please try again.",
+      "warning"
+    );
+  }
+};
   const handleCancelEdit = () => {
     setProfileForm({
       full_name: user?.full_name || user?.name || "",
