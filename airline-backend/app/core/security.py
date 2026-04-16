@@ -3,6 +3,7 @@ import bcrypt
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 from app.core.settings import settings
+from app.core.security import get_current_user
 
 def _hash_password_sha256(password: str) -> str:
     """Pre-hash password with SHA256 to avoid bcrypt's 72-byte limit"""
