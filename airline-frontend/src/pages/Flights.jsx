@@ -283,88 +283,27 @@ const Flights = () => {
           </section>
         )}
 
-       <section className="mb-10">
-  <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[28px] p-6 md:p-8 shadow-2xl">
-    {/* Header - EXACTLY like Home */}
-    <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-4">
-      <Search className="text-amber-400" size={20} />
-      <span className="font-bold tracking-widest text-sm uppercase">
-        Refine your journey
-      </span>
-      
-      {/* Clear button moved to right */}
-      <button
-        onClick={clearFilters}
-        className="ml-auto inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm hover:bg-white/10 transition-all"
-      >
-        <RefreshCcw size={16} />
-        Clear filters
-      </button>
-    </div>
+        <section className="mb-10">
+          <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[28px] p-6 md:p-8 shadow-2xl">
+            {/* Header - EXACTLY like Home */}
+            <div className="flex items-center justify-between gap-4 mb-6 border-b border-white/10 pb-4">
+              <div className="flex items-center gap-2">
+                <Search className="text-amber-400" size={20} />
+                <span className="font-bold tracking-widest text-sm uppercase">
+                  Refine your journey
+                </span>
+              </div>
 
-    {/* Filter Grid - Same as before */}
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-5">
-      <SearchField
-        label="From"
-        value={filters.from}
-        onChange={(value) => handleFilterChange("from", value)}
-        placeholder="Departure city"
-        icon={<MapPin size={17} />}
-      />
+              <button
+                onClick={clearFilters}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm hover:bg-white/10 transition-all"
+              >
+                <RefreshCcw size={16} />
+                Clear filters
+              </button>
+            </div>
 
-      <SearchField
-        label="To"
-        value={filters.destination}
-        onChange={(value) => handleFilterChange("destination", value)}
-        placeholder="Destination city"
-        icon={<MapPin size={17} />}
-      />
-
-      <DateField
-        label="Depart"
-        value={filters.departDate}
-        onChange={(value) => handleFilterChange("departDate", value)}
-        icon={<Calendar size={17} />}
-      />
-
-      <SelectField
-        label="Passengers"
-        value={filters.passengers}
-        onChange={(value) => handleFilterChange("passengers", value)}
-        icon={<Users size={17} />}
-        options={[
-          { value: "1", label: "1 Passenger" },
-          { value: "2", label: "2 Passengers" },
-          { value: "3", label: "3 Passengers" },
-          { value: "4", label: "4 Passengers" },
-        ]}
-      />
-
-      <SelectField
-        label="Sort By"
-        value={filters.sortBy}
-        onChange={(value) => handleFilterChange("sortBy", value)}
-        icon={<Sparkles size={17} />}
-        options={[
-          { value: "departureSoonest", label: "Departure Soonest" },
-          { value: "priceLowHigh", label: "Price: Low to High" },
-          { value: "priceHighLow", label: "Price: High to Low" },
-          { value: "seatsHighLow", label: "Most Seats Available" },
-        ]}
-      />
-
-      <ActionField onSearch={applySearch} />
-    </div>
-
-    {error && (
-      <div className="mt-5 rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200 flex items-center gap-2">
-        <AlertCircle size={16} />
-        {error}
-      </div>
-    )}
-  </div>
-</section>
-
+            {/* Filter Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-5">
               <SearchField
                 label="From"
@@ -689,7 +628,7 @@ const FlightResultCard = ({ flight, passengers, onBook, bookingBusy, user }) => 
               value={seatPreference}
               onChange={(e) => setSeatPreference(e.target.value)}
               disabled={soldOut || bookingBusy}
-              className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 px-3 text-sm text-white outline-none focus:border-amber-500/50 transition-all disabled:text-gray-500"
+              className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl py-2.5 px-3 text-sm text-white outline-none focus:border-amber-500/50 transition-all disabled:text-gray-400"
             >
               <option value="" className="bg-[#0b1220]">
                 Auto-assign seat
